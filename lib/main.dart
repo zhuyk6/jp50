@@ -33,10 +33,144 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: "/home",
-      routes: {
-        "/home": (context) => const HomePage(),
-      },
+      // initialRoute: "/home",
+      // routes: {
+      //   "/home": (context) => const HomePage(),
+      // },
+      home: const Navigation(),
+    );
+  }
+}
+
+class Navigation extends StatefulWidget {
+  const Navigation({super.key});
+
+  @override
+  State<Navigation> createState() => _NavigationState();
+}
+
+class _NavigationState extends State<Navigation> {
+  int currentPageIndex = 0;
+
+  Widget selectPage() {
+    switch (currentPageIndex) {
+      case 0:
+        return TestOptionPage();
+      // case 1:
+      //   return LearnPage();
+      default:
+        return Placeholder();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      bottomNavigationBar: NavigationBar(
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        selectedIndex: currentPageIndex,
+        onDestinationSelected: (int index) {
+          setState(() {
+            currentPageIndex = index;
+          });
+        },
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.quiz),
+            label: "Test",
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.school),
+            label: "Learn",
+          ),
+        ],
+      ),
+      body: selectPage(),
+    );
+  }
+}
+
+class TestOptionPage extends StatefulWidget {
+  const TestOptionPage({super.key});
+
+  @override
+  State<TestOptionPage> createState() => _TestOptionPageState();
+}
+
+class _TestOptionPageState extends State<TestOptionPage> {
+  double _number = 10;
+  (bool, bool) _option = (true, false);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              Text("Number of tests: ${_number.round()}"),
+              Expanded(
+                child: Slider(
+                  value: _number,
+                  min: 10,
+                  max: 50,
+                  divisions: 4,
+                  label: _number.round().toString(),
+                  onChanged: (double value) {
+                    setState(() {
+                      _number = value;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          DropdownMenu(
+            label: const Text("Type"),
+            onSelected: (selected) {
+              setState(() {
+                if (selected != null) {
+                  _option = selected;
+                }
+              });
+            },
+            // initialSelection: (true, false),
+            dropdownMenuEntries: const [
+              DropdownMenuEntry(
+                value: (true, false),
+                label: "平假名 Hiragana",
+              ),
+              DropdownMenuEntry(
+                value: (false, true),
+                label: "片假名 Katakana",
+              ),
+              DropdownMenuEntry(
+                value: (true, true),
+                label: "都测试 Both",
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => TestPage(
+                        option: _option,
+                        testNumber: _number.round(),
+                      )));
+            },
+            child: const Text("Go!"),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -279,11 +413,9 @@ class _TestPageState extends State<TestPage> {
   }
 
   void _toggleShowRome() {
-
     setState(() {
       _showRome = !_showRome;
     });
-    print("toggle ! $_showRome");
   }
 
   void Function() _checkAnswer(int index) {
@@ -372,40 +504,77 @@ class _TestPageState extends State<TestPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: _toggleShowRome,
-                style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20))),
-                child: Text(
-                  !_showRome ? _character : _rome,
-                  style: const TextStyle(
-                    fontSize: 150,
-                  ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Card(
+              shape: BeveledRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              child: Text(
+                _showRome ? _rome : _character,
+                style: TextStyle(
+                  fontSize: 150,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
-              const Divider(),
-              GridView.count(
-                crossAxisCount: 5,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                children: List.generate(
-                  50,
-                  (index) => ElevatedButton(
-                    onPressed: _checkAnswer(index),
-                    child:
-                        Text(JanpaneseCharacters.romes[index ~/ 5][index % 5]),
-                  ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () => (),
+                  icon: Icon(Icons.question_mark),
+                  label: Text("Help"),
                 ),
-              ),
-            ],
-          ),
+                SizedBox(width: 10,),
+                ElevatedButton.icon(
+                  onPressed: () => (),
+                  icon: Icon(Icons.done),
+                  label: Text("Try"),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
+      // body: Center(
+      //   child: SingleChildScrollView(
+      //     child: Column(
+      //       mainAxisAlignment: MainAxisAlignment.center,
+      //       children: [
+      //         ElevatedButton(
+      //           onPressed: _toggleShowRome,
+      //           style: ElevatedButton.styleFrom(
+      //               shape: RoundedRectangleBorder(
+      //                   borderRadius: BorderRadius.circular(20))),
+      //           child: Text(
+      //             !_showRome ? _character : _rome,
+      //             style: const TextStyle(
+      //               fontSize: 150,
+      //             ),
+      //           ),
+      //         ),
+      //         const Divider(),
+      //         GridView.count(
+      //           crossAxisCount: 5,
+      //           shrinkWrap: true,
+      //           physics: const NeverScrollableScrollPhysics(),
+      //           children: List.generate(
+      //             50,
+      //             (index) => ElevatedButton(
+      //               onPressed: _checkAnswer(index),
+      //               child:
+      //                   Text(JanpaneseCharacters.romes[index ~/ 5][index % 5]),
+      //             ),
+      //           ),
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      // ),
     );
   }
 }
