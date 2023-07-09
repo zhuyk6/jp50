@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,10 +32,6 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      // initialRoute: "/home",
-      // routes: {
-      //   "/home": (context) => const HomePage(),
-      // },
       home: const Navigation(),
     );
   }
@@ -55,11 +50,11 @@ class _NavigationState extends State<Navigation> {
   Widget selectPage() {
     switch (currentPageIndex) {
       case 0:
-        return TestOptionPage();
+        return const TestOptionPage();
       // case 1:
       //   return LearnPage();
       default:
-        return Placeholder();
+        return const Placeholder();
     }
   }
 
@@ -109,26 +104,20 @@ class _TestOptionPageState extends State<TestOptionPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Row(
-            children: [
-              Text("Number of tests: ${_number.round()}"),
-              Expanded(
-                child: Slider(
-                  value: _number,
-                  min: 10,
-                  max: 50,
-                  divisions: 4,
-                  label: _number.round().toString(),
-                  onChanged: (double value) {
-                    setState(() {
-                      _number = value;
-                    });
-                  },
-                ),
-              ),
-            ],
+          Text("Number of tests: ${_number.round()}"),
+          Slider(
+            value: _number,
+            min: 10,
+            max: 50,
+            divisions: 4,
+            label: _number.round().toString(),
+            onChanged: (double value) {
+              setState(() {
+                _number = value;
+              });
+            },
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           DropdownMenu(
@@ -156,7 +145,7 @@ class _TestOptionPageState extends State<TestOptionPage> {
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           ElevatedButton(
@@ -175,126 +164,126 @@ class _TestOptionPageState extends State<TestOptionPage> {
   }
 }
 
-class HomePage extends StatelessWidget {
-  static const routeName = "/home";
+// class HomePage extends StatelessWidget {
+//   static const routeName = "/home";
 
-  const HomePage({super.key});
+//   const HomePage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    void _chooseTestOptionDialog() async {
-      (bool, bool) option = await showDialog(
-        context: context,
-        builder: (BuildContext context) => SimpleDialog(
-          title: const Text("Choose test:"),
-          children: [
-            const Divider(),
-            SimpleDialogOption(
-              child: const Text("Hiragana"),
-              onPressed: () {
-                Navigator.pop(context, (true, false));
-              },
-            ),
-            const Divider(),
-            SimpleDialogOption(
-              child: const Text("Katakana"),
-              onPressed: () {
-                Navigator.pop(context, (false, true));
-              },
-            ),
-            const Divider(),
-            SimpleDialogOption(
-              child: const Text("Both"),
-              onPressed: () {
-                Navigator.pop(context, (true, true));
-              },
-            ),
-          ],
-        ),
-      );
+//   @override
+//   Widget build(BuildContext context) {
+//     void _chooseTestOptionDialog() async {
+//       (bool, bool) option = await showDialog(
+//         context: context,
+//         builder: (BuildContext context) => SimpleDialog(
+//           title: const Text("Choose test:"),
+//           children: [
+//             const Divider(),
+//             SimpleDialogOption(
+//               child: const Text("Hiragana"),
+//               onPressed: () {
+//                 Navigator.pop(context, (true, false));
+//               },
+//             ),
+//             const Divider(),
+//             SimpleDialogOption(
+//               child: const Text("Katakana"),
+//               onPressed: () {
+//                 Navigator.pop(context, (false, true));
+//               },
+//             ),
+//             const Divider(),
+//             SimpleDialogOption(
+//               child: const Text("Both"),
+//               onPressed: () {
+//                 Navigator.pop(context, (true, true));
+//               },
+//             ),
+//           ],
+//         ),
+//       );
 
-      var inputController = TextEditingController(text: "10");
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("Number of tests:"),
-          content: TextField(
-            controller: inputController,
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop(int.parse(inputController.text));
-              },
-              child: const Text('OK'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-          ],
-        ),
-      ).then((value) {
-        if (value != null) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => TestPage(
-                        option: option,
-                        testNumber: value,
-                      )));
-        }
-      });
-    }
+//       var inputController = TextEditingController(text: "10");
+//       showDialog(
+//         context: context,
+//         builder: (context) => AlertDialog(
+//           title: const Text("Number of tests:"),
+//           content: TextField(
+//             controller: inputController,
+//             keyboardType: TextInputType.number,
+//             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+//           ),
+//           actions: [
+//             ElevatedButton(
+//               onPressed: () {
+//                 Navigator.of(context).pop(int.parse(inputController.text));
+//               },
+//               child: const Text('OK'),
+//             ),
+//             ElevatedButton(
+//               onPressed: () {
+//                 Navigator.of(context).pop();
+//               },
+//               child: const Text('Cancel'),
+//             ),
+//           ],
+//         ),
+//       ).then((value) {
+//         if (value != null) {
+//           Navigator.push(
+//               context,
+//               MaterialPageRoute(
+//                   builder: (context) => TestPage(
+//                         option: option,
+//                         testNumber: value,
+//                       )));
+//         }
+//       });
+//     }
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Home"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () => (),
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-              ),
-              child: Text(
-                "Learn",
-                style: Theme.of(context).textTheme.displayLarge!.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-              ),
-            ),
-            const SizedBox(
-              height: 50,
-            ),
-            ElevatedButton(
-              onPressed: _chooseTestOptionDialog,
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-              ),
-              child: Text(
-                "Test",
-                style: Theme.of(context).textTheme.displayLarge!.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+//     return Scaffold(
+//       appBar: AppBar(
+//         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+//         title: const Text("Home"),
+//       ),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             ElevatedButton(
+//               onPressed: () => (),
+//               style: ElevatedButton.styleFrom(
+//                 shape: RoundedRectangleBorder(
+//                     borderRadius: BorderRadius.circular(10)),
+//               ),
+//               child: Text(
+//                 "Learn",
+//                 style: Theme.of(context).textTheme.displayLarge!.copyWith(
+//                       color: Theme.of(context).colorScheme.primary,
+//                     ),
+//               ),
+//             ),
+//             const SizedBox(
+//               height: 50,
+//             ),
+//             ElevatedButton(
+//               onPressed: _chooseTestOptionDialog,
+//               style: ElevatedButton.styleFrom(
+//                 shape: RoundedRectangleBorder(
+//                     borderRadius: BorderRadius.circular(10)),
+//               ),
+//               child: Text(
+//                 "Test",
+//                 style: Theme.of(context).textTheme.displayLarge!.copyWith(
+//                       color: Theme.of(context).colorScheme.primary,
+//                     ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class JanpaneseCharacters {
   static const List<List<String>> _characters = [
@@ -374,6 +363,13 @@ class TestPage extends StatefulWidget {
   State<TestPage> createState() => _TestPageState();
 }
 
+enum TestPageIndex {
+  query,
+  help,
+  guess,
+  finish;
+}
+
 class _TestPageState extends State<TestPage> {
   bool _select((bool, bool) option) {
     bool choose = true;
@@ -391,9 +387,10 @@ class _TestPageState extends State<TestPage> {
 
   String _character = "test";
   String _rome = "test";
-  bool _showRome = false;
 
-  int _finishedNumber = 0;
+  TestPageIndex pageIndex = TestPageIndex.query;
+
+  int _currentNumber = 0;
   int _correctNumber = 0;
 
   @override
@@ -408,13 +405,12 @@ class _TestPageState extends State<TestPage> {
       bool choose = _select(widget.option);
       _character = choose ? pair[0] : pair[1];
       _rome = pair[2];
-      _showRome = false;
-    });
-  }
 
-  void _toggleShowRome() {
-    setState(() {
-      _showRome = !_showRome;
+      pageIndex = TestPageIndex.query;
+      _currentNumber++;
+      if (_currentNumber > widget.testNumber) {
+        pageIndex = TestPageIndex.finish;
+      }
     });
   }
 
@@ -445,7 +441,7 @@ class _TestPageState extends State<TestPage> {
           "Wrong!",
           style: TextStyle(color: Colors.red),
         ),
-        content: Text("The correct answer is $_rome."),
+        content: Text("$_character is $_rome."),
         actions: [
           TextButton(
             onPressed: () {
@@ -458,7 +454,6 @@ class _TestPageState extends State<TestPage> {
       );
 
       setState(() {
-        _finishedNumber++;
         if (guess == _rome) {
           _correctNumber++;
         }
@@ -470,37 +465,73 @@ class _TestPageState extends State<TestPage> {
         context: context,
         builder: (context) => dialog,
       );
-
-      if (_finishedNumber >= widget.testNumber) {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text("Result"),
-            content: Text("Correct $_correctNumber in $_finishedNumber."),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.popUntil(
-                      context,
-                      ModalRoute.withName(
-                          "/home")); // close result dialog// close test page
-                },
-                child: const Text("Close"),
-              ),
-            ],
-          ),
-        );
-      }
     }
 
     return f;
   }
 
+  Widget _selectPage() {
+    switch (pageIndex) {
+      case TestPageIndex.query:
+        return TestQuery(
+          character: _character,
+          onClickHelp: () {
+            setState(() {
+              pageIndex = TestPageIndex.help;
+            });
+          },
+          onClickTry: () {
+            setState(() {
+              pageIndex = TestPageIndex.guess;
+            });
+          },
+        );
+      case TestPageIndex.help:
+        return TestHelp(
+          character: _character,
+          rome: _rome,
+          onClickNext: () {
+            _getNext();
+          },
+        );
+      case TestPageIndex.guess:
+        return TestTry(
+          character: _character,
+          onClick: _checkAnswer,
+        );
+      case TestPageIndex.finish:
+        return TestFinish(
+          total: widget.testNumber,
+          correct: _correctNumber,
+        );
+      default:
+        return const Placeholder();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _selectPage();
+  }
+}
+
+class TestQuery extends StatelessWidget {
+  const TestQuery({
+    super.key,
+    required this.character,
+    required this.onClickHelp,
+    required this.onClickTry,
+  });
+
+  final String character;
+  final void Function() onClickHelp;
+  final void Function() onClickTry;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Test"),
+        title: const Text("Query"),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Center(
@@ -511,70 +542,163 @@ class _TestPageState extends State<TestPage> {
               shape: BeveledRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
               child: Text(
-                _showRome ? _rome : _character,
+                character,
                 style: TextStyle(
                   fontSize: 150,
                   color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton.icon(
-                  onPressed: () => (),
-                  icon: Icon(Icons.question_mark),
-                  label: Text("Help"),
+                  onPressed: onClickHelp,
+                  icon: const Icon(Icons.question_mark),
+                  label: const Text("Help"),
                 ),
-                SizedBox(width: 10,),
+                const SizedBox(
+                  width: 10,
+                ),
                 ElevatedButton.icon(
-                  onPressed: () => (),
-                  icon: Icon(Icons.done),
-                  label: Text("Try"),
+                  onPressed: onClickTry,
+                  icon: const Icon(Icons.done),
+                  label: const Text("Try"),
                 ),
               ],
             ),
           ],
         ),
       ),
-      // body: Center(
-      //   child: SingleChildScrollView(
-      //     child: Column(
-      //       mainAxisAlignment: MainAxisAlignment.center,
-      //       children: [
-      //         ElevatedButton(
-      //           onPressed: _toggleShowRome,
-      //           style: ElevatedButton.styleFrom(
-      //               shape: RoundedRectangleBorder(
-      //                   borderRadius: BorderRadius.circular(20))),
-      //           child: Text(
-      //             !_showRome ? _character : _rome,
-      //             style: const TextStyle(
-      //               fontSize: 150,
-      //             ),
-      //           ),
-      //         ),
-      //         const Divider(),
-      //         GridView.count(
-      //           crossAxisCount: 5,
-      //           shrinkWrap: true,
-      //           physics: const NeverScrollableScrollPhysics(),
-      //           children: List.generate(
-      //             50,
-      //             (index) => ElevatedButton(
-      //               onPressed: _checkAnswer(index),
-      //               child:
-      //                   Text(JanpaneseCharacters.romes[index ~/ 5][index % 5]),
-      //             ),
-      //           ),
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // ),
+    );
+  }
+}
+
+class TestHelp extends StatelessWidget {
+  const TestHelp(
+      {super.key,
+      required this.character,
+      required this.rome,
+      required this.onClickNext});
+
+  final String character;
+  final String rome;
+  final void Function() onClickNext;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Help"),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              character,
+              style: Theme.of(context).textTheme.displayLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                  ),
+            ),
+            Text(
+              rome,
+              style: Theme.of(context).textTheme.displayLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                  ),
+            ),
+            ElevatedButton(
+              onPressed: onClickNext,
+              child: const Text("Next"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class TestTry extends StatelessWidget {
+  const TestTry({super.key, required this.character, required this.onClick});
+
+  final String character;
+  final void Function() Function(int) onClick;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Guess $character"),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      body: GridView.count(
+        crossAxisCount: 5,
+        padding: const EdgeInsets.all(5),
+        mainAxisSpacing: 2,
+        children: List.generate(
+          50,
+          (index) => ElevatedButton(
+            onPressed: onClick(index),
+            style: ElevatedButton.styleFrom(
+              shape: BeveledRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            child: Text(JanpaneseCharacters.romes[index ~/ 5][index % 5]),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class TestFinish extends StatelessWidget {
+  const TestFinish({
+    super.key,
+    required this.total,
+    required this.correct,
+  });
+
+  final int total;
+  final int correct;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Finished"),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.celebration,
+              size: 50,
+              color: Colors.blue,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Text(
+                "You guess ${correct.toString()} of ${total.toString()} correctly."),
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Close"),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
